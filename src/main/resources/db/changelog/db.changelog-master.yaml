@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-initDB.yaml
+  - changeSet:
+      id: 1
+      author: postgres
+      changes:
+        - createTable:
+            tableName: customers
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: postgres
+      comment: "Data init"
+      changes:
+        - insert:
+            tableName: customers
+            columns:
+              - column:
+                  name: username
+                  value: "Customer1"
+              - column:
+                  name: email
+                  value: "customer1@server.com"
+        - insert:
+            tableName: customers
+            columns:
+              - column:
+                  name: username
+                  value: "Customer2"
+              - column:
+                  name: email
+                  value: "customer2@server.com"
+        - insert:
+            tableName: customers
+            columns:
+              - column:
+                  name: username
+                  value: "Customer3"
+              - column:
+                  name: email
+                  value: "customer3@server.com"
+      rollback:
+        - delete:
+            tableName: customers
+            where: username in ('Customer1', 'Customer2', 'Customer3')
+
