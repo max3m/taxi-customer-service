@@ -5,8 +5,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class OrderDTO {
+public class Order {
     private Long id;
+    private Long chainId;
     private String username;
     private String driverUsername;
     private String status;

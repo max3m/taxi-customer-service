@@ -1,7 +1,7 @@
 package com.epam.training.microservices.taxicustomerservice.service;
 
 import com.epam.training.microservices.taxicustomerservice.exceptions.CustomerNotFoundNotException;
-import com.epam.training.microservices.taxicustomerservice.model.OrderDTO;
+import com.epam.training.microservices.taxicustomerservice.model.Order;
 import com.epam.training.microservices.taxicustomerservice.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,20 +18,25 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public OrderDTO sendOrderCreationRequest(OrderDTO orderDTO) {
-        if (checkIfCustomerExists(orderDTO.getUsername())) {
-            return orderClient.sendOrderCreationRequest(orderDTO);
+    public Order sendOrderCreationRequest(Order order) {
+        if (checkIfCustomerExists(order.getUsername())) {
+            Order orderDTOWithChainedId = orderClient.sendOrderCreationRequest(order);
+            Long id = orderDTOWithChainedId.getId();
+            orderDTOWithChainedId.setChainId(id);
+            return orderClient.sendOrderUpdateRequest(id, orderDTOWithChainedId);
         } else {
-            throw new CustomerNotFoundNotException(orderDTO.getUsername());
+            throw new CustomerNotFoundNotException(order.getUsername());
         }
     }
 
     @Override
-    public OrderDTO updateOrder(Long id, OrderDTO orderDTO) {
-        if (checkIfCustomerExists(orderDTO.getUsername())) {
-            return orderClient.sendOrderUpdateRequest(id, orderDTO);
+    public Order updateOrder(Long chainId, Order order) {
+        if (checkIfCustomerExists(order.getUsername())) {
+            order.setId(chainId);
+            order.setChainId(chainId);
+            return orderClient.sendOrderUpdateRequest(chainId, order);
         } else {
-            throw new CustomerNotFoundNotException(orderDTO.getUsername());
+            throw new CustomerNotFoundNotException(order.getUsername());
         }
     }
 }

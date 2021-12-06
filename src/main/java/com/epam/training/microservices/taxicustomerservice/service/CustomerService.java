@@ -1,9 +1,9 @@
 package com.epam.training.microservices.taxicustomerservice.service;
 
-import com.epam.training.microservices.taxicustomerservice.model.OrderDTO;
+import com.epam.training.microservices.taxicustomerservice.model.Order;
 
 public interface CustomerService {
     boolean checkIfCustomerExists(String username);
-    OrderDTO sendOrderCreationRequest(OrderDTO orderDTO);
-    OrderDTO updateOrder(Long id, OrderDTO orderDTO);
+    Order sendOrderCreationRequest(Order orderDTO);
+    Order updateOrder(Long id, Order order);
 }
